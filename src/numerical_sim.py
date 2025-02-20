@@ -26,3 +26,20 @@ def update_coordinates(positions_multidim: np.ndarray[np.ndarray], velocity_mult
 
     return new_position, new_velocity, new_acceleration
 
+def displace_bodies(body_pos1, body_pos2, body_radius1, body_radius2, body_mass1, body_mass2):
+    """After collision displaces bodies such that radii do not overlap anymore."""
+    dist_to_displace = (body_radius1 + body_radius2) - np.linalg.norm(body_pos1 - body_pos2)
+
+    # displace based on mass
+    dx1 = dist_to_displace * body_mass2 / ( body_mass1 + body_mass2 )
+    dx2 = dist_to_displace * body_mass1 / ( body_mass1 + body_mass2 )
+
+    # norm vector
+    norm_vector = (body_pos2 - body_pos1) / np.linalg.norm(body_pos1 - body_pos2)
+    dx1_vec = norm_vector * dx1
+    dx2_vec = norm_vector * dx2
+
+    new_body_pos1 = body_pos1 - dx1_vec
+    new_body_pos2 = body_pos2 + dx2_vec
+
+    return new_body_pos1, new_body_pos2

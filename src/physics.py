@@ -49,25 +49,16 @@ def two_dim_collision(body_position1, body_position2, body_velocity1, body_veloc
     Based on:
     https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
     """
-    # writing in shorter variable form
-    x1, y1 = body_position1
-    x2, y2 = body_position2
+    scalar = - ( 2.0 * body_mass2) / ( body_mass1 + body_mass2 ) 
+    numerator = np.dot( (body_velocity1 - body_velocity2), (body_position1 - body_position2) )
+    denominator = np.square( np.linalg.norm(body_position1 - body_position2) )
+    mul = body_position1 - body_position2
 
-    # velocities
-    v1x, v1y = body_velocity1
-    v2x, v2y = body_velocity2
+    corrected_velocity = scalar * ( numerator / denominator ) * mul
 
-    m1, m2 = body_mass1, body_mass2
+    new_velocity = body_velocity1 + corrected_velocity
 
-    # calculating movement angle
-    theta1 = np.arctan(v1y/v1x)
-    theta2 = np.arctan(v2y/v2x)
-
-    # contact angle
-    phi = np.arctan( )
-
-
-
+    return new_velocity
 
 if __name__ == "__main__":
     start_coordinate_sun = [0, 0]  # m(eter)
@@ -77,6 +68,5 @@ if __name__ == "__main__":
     mass_sun = 2e30   # kg
     mass_halley = 2.2e14  # kg
     body_masses = np.array([mass_sun, mass_halley])
-
 
     gravitational_acceleration(init_body_positions, body_masses)
